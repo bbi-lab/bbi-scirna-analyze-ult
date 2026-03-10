@@ -83,7 +83,7 @@ def make_data_file_json(data_file_dict):
     for pcr_pair in data_file_dict[process_group].keys():
       for sample_name in data_file_dict[process_group][pcr_pair].keys():
         merge_dict = {}
-        in_file = '%s-%03d_%s.trimmed.bam' % (sample_name, int(process_group), pcr_pair)
+        in_file = '%s-%03d_%s.merged.bam' % (sample_name, int(process_group), pcr_pair)
         merge_dict['sample_name'] = '%s-%03d' % (sample_name, int(process_group))
         merge_dict['in_file'] = in_file
         star_align_list.append(merge_dict)

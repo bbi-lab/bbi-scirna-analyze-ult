@@ -123,7 +123,7 @@ def get_data_file_dict(json_data, sample_hash_dict):
 
 
 def make_data_file_json(data_file_dict, sample_hash_dict):
-  hash_bam_list = []
+  hash_tsv_list = []
   for process_group in data_file_dict.keys():
     for sample_name in data_file_dict[process_group].keys():
       if(sample_hash_dict.get(process_group) != None
@@ -131,7 +131,7 @@ def make_data_file_json(data_file_dict, sample_hash_dict):
         and len(sample_hash_dict[process_group][sample_name][0]) > 0):
 
         for pcr_pair in data_file_dict[process_group][sample_name].keys():
-          in_file = '%s-%03d_%s.merged.bam' % (sample_name, int(process_group), pcr_pair)
+          in_file = '%s-%03d_%s.hash_reads.tsv' % (sample_name, int(process_group), pcr_pair)
           hash_file = sample_hash_dict[process_group][sample_name][0]
           out_root = '%s-%03d_%s' % (sample_name, int(process_group), pcr_pair)
           merge_dict = {}
@@ -139,12 +139,12 @@ def make_data_file_json(data_file_dict, sample_hash_dict):
           merge_dict['in_file'] = in_file
           merge_dict['hash_file'] = hash_file
           merge_dict['out_root'] = out_root
-          hash_bam_list.append(merge_dict)
+          hash_tsv_list.append(merge_dict)
 
   try:
     filename_json = 'process_hashes.json'
     fh = open(filename_json, 'w')
-    json.dump(hash_bam_list, fh, indent=2)
+    json.dump(hash_tsv_list, fh, indent=2)
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
     sys.exit(-1)

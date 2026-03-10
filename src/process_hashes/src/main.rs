@@ -13,10 +13,10 @@ use std::collections::hash_map::Entry;
 use process_hashes::barcode_utils;
 extern crate clap;
 use clap::{Arg, Command};
-use rust_htslib::bam::{Read, Reader};
 use sprs::CsMat;
 use regex::Regex;
 use itertools::Itertools;
+use serde::{Deserialize};
 
 
 /*
@@ -36,29 +36,14 @@ fn set_cl_options() -> Result<clap::Command, Box<dyn std::error::Error>> {
                   .short('s')
                   .long("hash_sheet")
                   .help("Path to hash sample sheet."))
-        .arg(Arg::new("bam")   // required=true
+        .arg(Arg::new("tsv")   // required=true
                   .required(true)
                   .num_args(1..)
                   .value_delimiter(' ')
                   .value_terminator("--")
-                  .short('b')
-                  .long("bam")
-                  .help("Input bam filenames separated by spaces."))
-        .arg(Arg::new("hash_edit_distance")  // required=false, default=1
-                  .required(false)
-                  .default_value("1")
-                  .short('d')
-                  .long("hash_edit_distance")
-                  .value_parser(clap::value_parser!(usize))
-                  .help("Allowed edit distance for hashes."))
-        .arg(Arg::new("number_bam_threads")   //required=false
-                  .required(false)
                   .short('t')
-                  .long("ncpu")
-                  .number_of_values(1)
-                  .default_value("1")
-                  .value_parser(clap::value_parser!(usize))
-                  .help("Number of threads to use for reading BAM file."))
+                  .long("tsv")
+                  .help("Input tsv filenames separated by spaces."))
         .arg(Arg::new("key")   //required=true
                   .required(true)
                   .short('k')
@@ -68,84 +53,63 @@ fn set_cl_options() -> Result<clap::Command, Box<dyn std::error::Error>> {
 }
 
 
-fn process_bam_file(hash_edit_distance: usize,
-                    hash_whitelist: &Vec<HashMap<String, String>>,
+#[derive(Deserialize, Debug)]
+struct TsvRecord {
+  read_name: String,
+  encoded_read_barcode: String,
+  rt_barcode: String,
+  lig_barcode: String,
+  umi_sequence: String,
+  hash_sequence: String
+}
+
+
+fn process_tsv_file<R: std::io::Read>(hash_whitelist: &Vec<HashMap<String, String>>,
                     cells: &mut HashSet<String>,
                     read_counts: &mut Vec<u64>,
                     hash_counts: &mut Vec<u64>,
                     hashdict: &mut HashMap<String, HashMap<String, HashMap<String, u64>>>,
-                    bam_reader: &mut Reader,
+                    tsv_reader: &mut csv::Reader<R>,
                     num_hash: &mut u64,
                     hash_lookup: &HashMap<String, String>) -> Result<(), Box<dyn std::error::Error>> {
 
   /*
   ** Loop through input reads.
   */
-  let mut header: &str;
-  let mut seq: &str;
-  let mut record = rust_htslib::bam::Record::new();
-  let mut hashbc: &str;
   let mut hashval: &String = &"none".to_string();
-  let mut polya: &str;
-  let mut header_toks: Vec<&str>;
-  let mut len_header_toks: usize;
+  let mut read_name_toks: Vec<&str>;
+  let mut len_read_name_toks: usize;
   let mut cell_barc: String;
   let mut umi: String;
-  let mut is_hash: bool;
-  let mut i_edit_distance: usize = 0;
   let mut num_read: u64 = 0;
   let mut num_hash_read: u64 = 0;
+  let i_edit_distance: usize = 0;
 
-  while let Some(result) = bam_reader.read(&mut record) {
-    result.expect("Error: unable to parse BAM record");
-
+  for tsv_record_result in tsv_reader.deserialize() {
     num_read += 1;
 
-    header = std::str::from_utf8(record.qname()).expect("bad status getting bam read header");
-    let bseq = record.seq().as_bytes();
-    seq = std::str::from_utf8(&bseq).expect("bad status getting bam read sequence");
+    let tsv_record: TsvRecord = tsv_record_result.expect("Error: unable to read tsv record.");
 
-    if(seq.len() < 15) {
-      continue
-    }
+    read_name_toks = tsv_record.read_name.split("|").collect();
+    len_read_name_toks = read_name_toks.len();
+    cell_barc = read_name_toks[2..len_read_name_toks-1].join("_");
+    umi = read_name_toks[len_read_name_toks-1].to_string();
 
     /*
-    ** Is this a hash read?
+    ** The Ultima trimmer records the whitelist hash sequence in
+    ** the cram file so the edit distance is 0.
     */
-    polya = &seq[11..15];
-    is_hash = false;
-    if(polya == "AAAA") {
-      hashbc = &seq[0..10];
-      for i in (0..hash_edit_distance+1) {
-        if let Some(hashval_tmp) = hash_whitelist[i].get(hashbc) {
-          is_hash = true;
-          hashval = hashval_tmp;
-          i_edit_distance = i;
-          break
-        }
-      }
-    }
-
-    if(!is_hash) {
-      continue;
-    }
+    // hashval = hash_whitelist[0].get(&tsv_record.hash_sequence).expect("Error: unable to find hash barcode in whitelist.");
+    if let Some(hv) = hash_whitelist[0].get(&tsv_record.hash_sequence) {hashval = hv} else {continue;}
 
     num_hash_read += 1;
-
-    /*
-    ** This is a hash read!
-    */
-    header_toks = header.split("|").collect();
-    len_header_toks = header_toks.len();
-    cell_barc = header_toks[2..len_header_toks-1].join("_");
-    umi = header_toks[len_header_toks-1].to_string();
 
     /*
     ** The following line if for checking the read parsing. Keep it
     ** commented out unless necessary for testing.
     */
-//    println!("hash_dict: {}|{}|{}", hashval, cell_barc, umi);
-//    println!("hash_dict: {}|{}|{}", hash_lookup[hashval], cell_barc, umi);
+    // println!("hash_dict: {}|{}|{}", hashval, cell_barc, umi);
+    // println!("hash_dict: {}|{}|{}", hash_lookup[hashval], cell_barc, umi);
 
     /*
     ** Record distinct cells.
@@ -154,6 +118,8 @@ fn process_bam_file(hash_edit_distance: usize,
 
     /*
     ** Count hash reads.
+    ** Notes:
+    **   o  umi_new is a flag set in update_nested_maps().
     */
     let mut umi_new: usize = 0;
     let _result = update_nested_maps(hashval, cell_barc, umi, hashdict, &mut umi_new);
@@ -569,10 +535,8 @@ fn main() {
   */
   let sample_name: String = cl_arg.get_one::<String>("sample_name").unwrap().to_string();
   let hash_sheet: String = cl_arg.get_one::<String>("hash_sheet").unwrap().to_string();
-  let bam_filenames: Vec<_> = cl_arg.get_many::<String>("bam").unwrap().collect();
-  let hash_edit_distance: usize = *cl_arg.get_one::<usize>("hash_edit_distance").unwrap();
+  let tsv_filenames: Vec<_> = cl_arg.get_many::<String>("tsv").unwrap().collect();
   let key: String = cl_arg.get_one::<String>("key").unwrap().to_string();
-  let num_threads: usize = cl_arg.get_one::<usize>("number_bam_threads").unwrap().clone();
 
   /*
   ** Set up hash whitelist map.
@@ -605,7 +569,7 @@ fn main() {
   ** Total read and hashes counters.
   */
   let mut read_counts: Vec<u64> = vec![0; 2];
-  let mut hash_counts: Vec<u64> = vec![0; hash_edit_distance+1];
+  let mut hash_counts: Vec<u64> = vec![0; 1];
 
   /*
   ** Total hash counter used for diagnostics.
@@ -618,12 +582,11 @@ fn main() {
 
   /*
   ** Set up file handle and reader from either stdin or specified file, and
-  ** process the bam file(s).
+  ** process the tsv file(s).
   */
-  for bam_filename in bam_filenames {
-    let mut bam_reader = rust_htslib::bam::Reader::from_path(&bam_filename).expect("Error: unable to open BAM file");
-    bam_reader.set_threads(num_threads).expect("Error: unable to set number of threads for BAM file reading");
-    let _ = process_bam_file(hash_edit_distance, &hash_whitelist, &mut cells, &mut read_counts, &mut hash_counts, &mut hashdict, &mut bam_reader, &mut num_hash, &hash_lookup);
+  for tsv_filename in tsv_filenames {
+    let mut tsv_reader = csv::ReaderBuilder::new().delimiter(b'\t').from_path(&tsv_filename).expect("Error: unable to open TSV file.");
+    let _ = process_tsv_file(&hash_whitelist, &mut cells, &mut read_counts, &mut hash_counts, &mut hashdict, &mut tsv_reader, &mut num_hash, &hash_lookup);
   }
 
   // dump_nested_maps(&mut hashdict);
@@ -673,7 +636,7 @@ fn main() {
   let path = Path::new(&file_name);
   let file = File::create(path).expect(&format!("unable to open file {}", file_name));
   let mut writer = BufWriter::new(file);
-  for i_dist in (0..hash_edit_distance+1) {
+  for i_dist in (0..1) {
     writeln!(writer, "Hash UMIs detected with {} correction: {}", i_dist, hash_counts[i_dist]).expect("error writing log file");
   }
   writeln!(writer, "Read_counts: {} {} {:.4}", read_counts[0], read_counts[1], read_counts[1] as f64 / read_counts[0] as f64).expect("error writing log file");

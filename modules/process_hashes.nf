@@ -16,7 +16,7 @@ process process_hashes {
   maxRetries 2
 
   input:
-  tuple val(sample_name), val(hash_file), path(bam_in), val(out_root)
+  tuple val(sample_name), val(hash_file), path(tsv_in), val(out_root)
 
   output:
   tuple val(sample_name), path("*.hashumis.mtx"), emit: hash_matrix
@@ -37,7 +37,7 @@ process process_hashes {
   # bash watch for errors
   set -ueo pipefail
 
-  process_hashes -n ${sample_name} -k ${out_root} -s ${hash_file} -b ${bam_in} -t 2
+  process_hashes -n ${sample_name} -k ${out_root} -s ${hash_file} -b ${tsv_in} -t 2
   """
 }
 

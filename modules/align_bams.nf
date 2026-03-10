@@ -1,7 +1,7 @@
 def align_bam_function(item) {
   def sample_name = item['sample_name']
   def in_file = item['in_file']
-  def file_path = params.object_map.trim_bam_map[in_file]
+  def file_path = params.object_map.merge_bam_map[in_file]
   def out_dir = in_file.take(in_file.lastIndexOf('.'))
 
   return([sample_name, file_path, out_dir])
@@ -17,7 +17,6 @@ process align_bams {
 
   clusterOptions { '-l m_mem_free=' + sample_map['star_memory'].toInteger() / align_cpus + 'G -pe serial ' + align_cpus + ' -l cpuid_level=22' }
 
-//  publishDir path: "${analyze_out}/${sample_name}", pattern: "*trimmed", mode: 'copy'
   publishDir path: "${analyze_out}/${sample_name}", pattern: "CellReads.stats", mode: 'copy'
 
   input:

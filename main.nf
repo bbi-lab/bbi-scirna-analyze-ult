@@ -32,7 +32,6 @@ params.object_map = [:]
 */
 params.object_map.merge_bam_map = [:]
 params.object_map.process_hashes_map = [:]
-params.object_map.trim_bam_map = [:]
 params.object_map.merge_align_bam_map = [:]
 params.object_map.run_scrublet_cds_map = [:]
 params.object_map.cat_matrices_raw_map = [:]
@@ -47,8 +46,6 @@ include { make_merge_demux_json } from './modules/make_merge_demux_json.nf'
 include { merge_demux } from './modules/merge_demux.nf'
 include { make_process_hashes_json } from './modules/make_process_hashes_json.nf'
 include { process_hashes; cat_hashes; process_hashes_function; hash_umi_knee_plot; calc_tot_hash_dup; assign_hash_raw } from './modules/process_hashes.nf'
-include { make_trim_bam_json } from './modules/make_trim_bam_json.nf'
-include { trim_bams; trim_bam_function; aggregate_trimmer_logs } from './modules/trim_bams.nf'
 include { make_star_align_json } from './modules/make_star_align_json.nf'
 include { align_bams; align_bam_function } from './modules/align_bams.nf'
 include { make_merge_align_json } from './modules/make_merge_align_json.nf'
@@ -151,7 +148,7 @@ workflow {
 
   /*
   ** Here are some convolutions in order to pass
-  ** the paths of merged bam files to the trim
+  ** the paths of merged bam files to the align
   ** bams process. The merged bam files are in the
   ** work directory so the paths are not known
   ** until Nextflow runs the merge_demux process.
@@ -164,7 +161,7 @@ workflow {
   **      addition, the global variable
   **      params.object_map.merge_bam_map transfers
   **      values from the .subscribe() operator to the
-  **      trim_bam_function().
+  **      align_bam_function().
   **   o  in short, the following .subscribe() operator
   **      makes a Java associative array (map) that
   **      maps a bam filename to its path in the work
@@ -227,29 +224,9 @@ workflow {
   calc_tot_hash_dup(cat_hashes.out.hash_dup_per_cell)
 
   /*
-  ** Set up and run (cutadapt) read trimming.
-  */
-  make_trim_bam_json(samplesheet_file, merge_demux.out.collect())
-  make_trim_bam_json.out.splitJson().map{trim_bam_function(it)}.set{trim_bam_channel_in}
-  trim_bams(trim_bam_channel_in)
-
-  /*
-  ** Aggregate trimmer logs.
-  */
-  trim_bams.out.trimmer_logs.groupTuple().set { aggregate_trimmer_logs_channel_in }
-  aggregate_trimmer_logs(aggregate_trimmer_logs_channel_in)
-
-  /*
   ** Set up and run STAR aligner in STARsolo mode.
   */
-  trim_bams.out.trimmed_bams.subscribe onNext: {
-    path -> {
-      def file_base_name = path.toString().tokenize('/').last()
-      params.object_map.trim_bam_map[file_base_name] = path
-    }
-  }
-
-  make_star_align_json(samplesheet_file, trim_bams.out.trimmed_bams.collect())
+  make_star_align_json(samplesheet_file, merge_demux.out.collect())
   make_star_align_json.out.splitJson().map{align_bam_function(it)}.combine(sample_maps_split, by: 0).set{align_bam_channel_in}
   align_bams(align_bam_channel_in)
 
