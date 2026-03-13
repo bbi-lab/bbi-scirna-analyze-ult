@@ -44,6 +44,8 @@ params.object_map.cat_matrices_raw_map = [:]
 include { make_sample_map_json } from './modules/make_sample_map_json.nf'
 include { make_merge_demux_json } from './modules/make_merge_demux_json.nf'
 include { merge_demux } from './modules/merge_demux.nf'
+include { make_merge_hash_reads_json } from './modules/make_merge_hash_reads_json.nf'
+include { merge_hash_reads } from './modules/merge_hash_reads.nf'
 include { make_process_hashes_json } from './modules/make_process_hashes_json.nf'
 include { process_hashes; cat_hashes; process_hashes_function; hash_umi_knee_plot; calc_tot_hash_dup; assign_hash_raw } from './modules/process_hashes.nf'
 include { make_star_align_json } from './modules/make_star_align_json.nf'
@@ -77,6 +79,17 @@ samplesheet_file = channel.fromPath(params.samplesheet_json)
 */
 def merge_demux_closure = {
   item -> 
+          def sample_name = item['sample_name']
+          def out_name = item['out_file']
+          def in_file_list = []
+          for(in_file in item['in_file_list']) {
+            in_file_list.add(file(in_file))
+          }
+          [sample_name, out_name, in_file_list]
+}
+
+def merge_hash_reads_closure = {
+  item ->
           def sample_name = item['sample_name']
           def out_name = item['out_file']
           def in_file_list = []
@@ -140,6 +153,13 @@ workflow {
   merge_demux(merge_demux_channel_in)
 
   /*
+  ** Set up and run hash read TSV file merge.
+  */
+  make_merge_hash_reads_json(samplesheet_file, "$demux_out")
+  make_merge_hash_reads_json.out.splitJson().map{merge_hash_reads_closure(it)}.set{merge_hash_reads_channel_in}
+  merge_hash_reads(merge_hash_reads_channel_in)
+
+  /*
   ** Make a JSON file with sample-specific values.
   */
   make_sample_map_json(samplesheet_file, genomes_data_file)
@@ -198,7 +218,7 @@ workflow {
     }
   }
 
-  merge_demux.out.subscribe onNext: {
+  merge_hash_reads.out.subscribe onNext: {
     path -> {
       def file_base_name = path.toString().tokenize('/').last()
       params.object_map.process_hashes_map[file_base_name] = path
@@ -213,7 +233,7 @@ workflow {
   **      for finding the required paths in the work
   **      directory.
   */
-  make_process_hashes_json(samplesheet_file, merge_demux.out.collect())
+  make_process_hashes_json(samplesheet_file, merge_hash_reads.out.collect())
   make_process_hashes_json.out.splitJson().filter{it.size() > 0}.map{process_hashes_function(it)}.set{process_hashes_channel_in}
   process_hashes(process_hashes_channel_in)
 

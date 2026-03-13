@@ -37,7 +37,7 @@ process process_hashes {
   # bash watch for errors
   set -ueo pipefail
 
-  process_hashes -n ${sample_name} -k ${out_root} -s ${hash_file} -b ${tsv_in} -t 2
+  process_hashes -n ${sample_name} -k ${out_root} -s ${hash_file} -t ${tsv_in}
   """
 }
 

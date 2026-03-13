@@ -1,4 +1,5 @@
 process merge_demux {
+  cache 'lenient'
   errorStrategy 'retry'
   maxRetries 2
 
@@ -16,7 +17,7 @@ process merge_demux {
   file_list=`ls files*`
   for file in \$file_list
   do
-    samtools sort -@ 4 -m 8G \${file} -o \${file}.sorted
+    samtools sort -@ 4 -m 64G \${file} -o \${file}.sorted
   done
   samtools merge -@ 4 ${out_file} *.sorted
   rm -r *.sorted

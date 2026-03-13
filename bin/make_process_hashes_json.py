@@ -131,7 +131,7 @@ def make_data_file_json(data_file_dict, sample_hash_dict):
         and len(sample_hash_dict[process_group][sample_name][0]) > 0):
 
         for pcr_pair in data_file_dict[process_group][sample_name].keys():
-          in_file = '%s-%03d_%s.hash_reads.tsv' % (sample_name, int(process_group), pcr_pair)
+          in_file = '%s-%03d_%s.hash_reads.merged.tsv' % (sample_name, int(process_group), pcr_pair)
           hash_file = sample_hash_dict[process_group][sample_name][0]
           out_root = '%s-%03d_%s' % (sample_name, int(process_group), pcr_pair)
           merge_dict = {}
