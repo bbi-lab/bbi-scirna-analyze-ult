@@ -194,7 +194,7 @@ def make_sample_stats_dict(sample_name_list, cellread_statistics_dict, umi_cell_
     cells_fdr_p01            = umi_cell_statistics_dict[sample_name]['cell_counts_fdr']
 #    cells_100_umis           = umi_cell_statistics_dict[sample_name]['cell_counts_umi']
     if(hash_read_rate_dict.get(sample_name)):
-      hash_read_rate         = float(hash_read_rate_dict[sample_name]['total_reads']) / (float(hash_read_rate_dict[sample_name]['total_reads']) + float(starsolo_summary_dict[sample_name]['number_of_reads']))
+      hash_read_rate         = float(hash_read_rate_dict[sample_name]['hash_reads']) / (float(hash_read_rate_dict[sample_name]['total_reads']) + float(starsolo_summary_dict[sample_name]['number_of_reads']))
     else:
       hash_read_rate         = 'NA'
 
