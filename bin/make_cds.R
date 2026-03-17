@@ -112,6 +112,8 @@ for (m in meta_types) {
 cds <- cds[,Matrix::colSums(counts(cds)) != 0]
 cds <- estimate_size_factors(cds)
 
+cds <- detect_genes(cds)
+
 if(ncol(counts(cds)) >= 51) {
   cds <- preprocess_cds(cds)
   cds <- reduce_dimension(cds)
