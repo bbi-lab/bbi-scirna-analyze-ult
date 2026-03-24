@@ -195,8 +195,10 @@ def make_sample_stats_dict(sample_name_list, cellread_statistics_dict, umi_cell_
 #    cells_100_umis           = umi_cell_statistics_dict[sample_name]['cell_counts_umi']
     if(hash_read_rate_dict.get(sample_name)):
       hash_read_rate         = float(hash_read_rate_dict[sample_name]['hash_reads']) / (float(hash_read_rate_dict[sample_name]['total_reads']) + float(starsolo_summary_dict[sample_name]['number_of_reads']))
+      hash_match_rate        = float(hash_read_rate_dict[sample_name]['hash_rate'])
     else:
       hash_read_rate         = 'NA'
+      hash_match_rate        = 'NA'
 
     if(median_umis > 0):
       median_mitochondrial_umis_percent = (float(median_mitochondial_umis) / float(median_umis)) * 100.0
@@ -214,6 +216,7 @@ def make_sample_stats_dict(sample_name_list, cellread_statistics_dict, umi_cell_
     stats_dict['Cells_1000_UMIs']                   = '%d' % cells_1000_umis
     stats_dict['Cells_FDR_p01']                     = '%d' % cells_fdr_p01
     stats_dict['Hash_Read_Rate']                    = '%.3f' % float(hash_read_rate) if(hash_read_rate != 'NA') else 'NA'
+    stats_dict['Hash_Match_Rate']                   = '%.3f' % float(hash_match_rate) if(hash_match_rate != 'NA') else 'NA'
 
     sample_stats_dict[sample_name] = stats_dict
 

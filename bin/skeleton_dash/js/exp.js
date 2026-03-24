@@ -227,7 +227,7 @@ function RegRow(props) {
 function StatsPane(props) {
   var sample_stat = props.sample_stats[props.sample_id];
   // const stats_list = ["Total Reads", "Total UMIs", "Median UMIs", "Median Mitochondrial UMIs", "Duplication Rate", "Cells with >=100 UMIs", "Cells with >=1000 UMIs", "Cells with FDR<=.01", "Cells with FDR<=.001"]
-  var stats_list = ["Total Reads", "Total UMIs", "Median UMIs", "Median Mitochondrial UMIs", "Duplication Rate", "Cells with >=100 UMIs", "Cells with >=1000 UMIs", "Cells with FDR<=.01", "Hash Read Rate"];
+  var stats_list = ["Total Reads", "Total UMIs", "Median UMIs", "Median Mitochondrial UMIs", "Duplication Rate", "Cells with >=100 UMIs", "Cells with >=1000 UMIs", "Cells with FDR<=.01", "Hash Read Rate", "Hash Match Rate"];
 
   var safe_name = "hp" + props.sample_id.replace(/[.]/g, "");
   return React.createElement(
@@ -267,7 +267,8 @@ function StatsPane(props) {
           React.createElement(RegRow, { val: sample_stat.Cells_100_UMIs }),
           React.createElement(RegRow, { val: sample_stat.Cells_1000_UMIs }),
           React.createElement(RegRow, { val: sample_stat.Cells_FDR_p01 }),
-          React.createElement(RegRow, { val: sample_stat.Hash_Read_Rate })
+          React.createElement(RegRow, { val: sample_stat.Hash_Read_Rate }),
+          React.createElement(RegRow, { val: sample_stat.Hash_Match_Rate })
         )
       )
     )
@@ -636,6 +637,20 @@ var sortTypes = {
       return a.Hash_Read_Rate - b.Hash_Read_Rate;
     }
   },
+
+  hash_match_rate_up: {
+    class: 'sort-up',
+    fn: function fn(a, b) {
+      return b.Hash_Match_Rate - a.Hash_Match_Rate;
+    }
+  },
+  hash_match_rate_down: {
+    class: 'sort-down',
+    fn: function fn(a, b) {
+      return a.Hash_Match_Rate - b.Hash_Match_Rate;
+    }
+  },
+
   default: {
     class: 'sort',
     fn: function fn(a, b) {
@@ -912,6 +927,16 @@ var Table = function (_React$Component) {
                   { onClick: this.onSorthash_read_rate, className: "sort_button" },
                   React.createElement("i", { className: "fas fa-sort" })
                 )
+              ),
+              React.createElement(
+                "th",
+                null,
+                "Hash Match Rate",
+                React.createElement(
+                  "button",
+                  { onClick: this.onSorthash_match_rate, className: "sort_button" },
+                  React.createElement("i", { className: "fas fa-sort" })
+                )
               )
             )
           ),
@@ -971,6 +996,11 @@ var Table = function (_React$Component) {
                   "td",
                   null,
                   p.Hash_Read_Rate
+                ),
+                React.createElement(
+                  "td",
+                  null,
+                  p.Hash_Match_Rate
                 )
               );
             })
