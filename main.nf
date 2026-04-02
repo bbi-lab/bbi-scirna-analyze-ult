@@ -14,6 +14,7 @@ params.hash_ratio = false
 params.hash_dup = false //Default is false. Other options are "p5" or "pcr_plate".
 params.run_empty_drops = true
 params.run_scrublet = true
+params.cpuid_level = 22
 
 
 demux_out = "${params.output_dir}/demux_out"

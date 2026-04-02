@@ -33,16 +33,16 @@
   "Human_bcp": {
      "genes_bed": "/net/bbi/vol1/data/genomes_bcp/human_grch38/GRCh38-v48/genes/latest.genes.bed",
      "star_index": "/net/bbi/vol1/data/genomes_bcp/human_grch38/GRCh38-v48/star_2_7_11b",
-     "star_memory": 60
+     "star_memory": 32
   },
   "Mouse_bcp": {
      "genes_bed": "/net/bbi/vol1/data/genomes_bcp/mouse_grcm39/GRCm39-vM37/genes/latest.genes.bed",
      "star_index": "/net/bbi/vol1/data/genomes_bcp/mouse_grcm39/GRCm39-vM37/star_2_7_11b",
-     "star_memory": 47
+     "star_memory": 32
   },
   "Barnyard_bcp": {
      "genes_bed": "/net/bbi/vol1/data/genomes_bcp/barnyard_bcp/genes/latest.genes.bed",
      "star_index": "/net/bbi/vol1/data/genomes_bcp/barnyard_bcp/star_2_7_11b",
-     "star_memory": 90
+     "star_memory": 32
   }
 }

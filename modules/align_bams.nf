@@ -15,7 +15,7 @@ process align_bams {
   errorStrategy 'retry'
   maxRetries 2
 
-  clusterOptions { '-l m_mem_free=' + sample_map['star_memory'].toInteger() / align_cpus + 'G -pe serial ' + align_cpus + ' -l cpuid_level=22' }
+  clusterOptions { '-l m_mem_free=' + Math.round(sample_map['star_memory'].toFloat() / align_cpus.toFloat()) + 'G -pe serial ' + align_cpus + " -l cpuid_level=${params.cpuid_level}" }
 
   publishDir path: "${analyze_out}/${sample_name}", pattern: "CellReads.stats", mode: 'copy'
 
