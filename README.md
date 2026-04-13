@@ -26,7 +26,7 @@ https://www.nextflow.io/docs/latest/install.html
 
 ### *process_hashes* program
 
-We include a *process_hashes* executable in the *bbi-scirna-analyze/bin* directory. It runs on the Shendure cluster nodes. If it does not run on your CPUs, you will need to build the executable from the source code. See the following sections on installing Rust and building and installing *process_hashes*.
+We include a *process_hashes* executable in the *bbi-scirna-analyze-ult/bin* directory. It runs on the Shendure cluster nodes. If it does not run on your CPUs, you will need to build the executable from the source code. See the following sections on installing Rust and building and installing *process_hashes*.
 
 ### Install Rust
 
@@ -39,7 +39,7 @@ https://www.rust-lang.org/tools/install
 Run the following commands
 
 ```
-cd bbi-scirna-analyze/src/process_hashes
+cd bbi-scirna-analyze-ult/src/process_hashes
 cargo build --release
 cp target/release/process_hashes ../../bin
 ```
@@ -48,11 +48,11 @@ I recommend that you build *process_hashes* on a newer cluster node, for example
 
 ### *STAR* aligner program
 
-We include a *STAR* aligner executable in the *bbi-scirna-analyze/bin* directory. It runs on the Shendure cluster nodes. If it does not run on your CPUs, you will need to build the executable from the source code. See the following sections on building and installing the *STAR* aligner program.
+We include a *STAR* aligner executable in the *bbi-scirna-analyze-ult/bin* directory. It runs on the Shendure cluster nodes. If it does not run on your CPUs, you will need to build the executable from the source code. See the following sections on building and installing the *STAR* aligner program.
 
 ### Load the *STAR* aligner on the Genome Sciences cluster
 
-The *STAR* aligner can be loaded by Nextflow from a GS module. The module load command is in the file *bbi-scirna-analyze/nextflow.config*.
+The *STAR* aligner can be loaded by Nextflow from a GS module. The module load command is in the file *bbi-scirna-analyze-ult/nextflow.config*.
 
 I found that the most recent *STAR* aligner version, *STAR 2.7.11b*, can fail with a segmentation fault when run on input files with only a few reads. You can fix this problem by cloning the *STAR* git repository and editing the source-code file called *STAR-2.7.11b/source/serviceFuns.cpp* to add the lines
 
@@ -84,12 +84,22 @@ Then build the *STAR* executable using the command
 make
 ```
 
-in the *STAR-2.7.11b/source* directory. Copy the resulting *STAR* executable file to the *bbi-scirna-analyze/bin* directory.
+in the *STAR-2.7.11b/source* directory. Copy the resulting *STAR* executable file to the *bbi-scirna-analyze-ult/bin* directory.
 
 Notes:
 - the STAR compilation failed when the samtools/1.19 module was loaded. I believe that the linker was using the samtools htslib rather than the STAR htslib.
 
-## Run bbi-scirna-analyze
+### Edit the *experiment.config* file.
+
+Use the *experiment.config* file that you prepared for the *bbi-scirna-demux-ult* pipeline. You can add Nextflow configuration parameters such as
+
+- params.run_empty_drops
+- params.run_scrublet
+- params.cpuid_level
+
+See *bbi-scirna-analyze-ult/main.nf* for additional parameters and their default values. You can include these parameters in *experiment.config* before you run the *bbi-scirna-demux-ult* pipeline.
+
+## Run bbi-scirna-analyze-ult
 
 Use the *run.analyze.sh* bash script to start the pipeline run.
 
