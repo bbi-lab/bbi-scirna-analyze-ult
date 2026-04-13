@@ -44,5 +44,10 @@
      "genes_bed": "/net/bbi/vol1/data/genomes_bcp/barnyard_bcp/genes/latest.genes.bed",
      "star_index": "/net/bbi/vol1/data/genomes_bcp/barnyard_bcp/star_2_7_11b",
      "star_memory": 32
+  },
+  "zebrafish_bcp": {
+     "genes_bed": "/net/bbi/vol1/data/genomes_bcp/zebrafish_bcp/genes/latest.genes.bed",
+     "star_index": "/net/bbi/vol1/data/genomes_bcp/zebrafish_bcp/Danio_rerio.GRCz11.115.500bp.gtf.filtered",
+     "star_memory": 40
   }
 }
