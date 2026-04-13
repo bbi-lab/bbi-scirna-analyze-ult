@@ -1,8 +1,9 @@
-# bbi-scirna-analyze
+# bbi-scirna-analyze-ult
 
 ## Intro
 
-This *bbi-scirna-analyze* pipeline reads the unaligned BAM files from the *bbi-scirna-demux* pipeline, runs trimming and alignment programs, and makes a CDS file.
+This *bbi-scirna-analyze-ult* pipeline reads the unaligned BAM files and hash read *.tsv* files from the *bbi-scirna-demux-ult* pipeline, and processes them
+to make the required sample-specific output files.
 
 ## Installation
 
@@ -92,4 +93,4 @@ Notes:
 
 Use the *run.analyze.sh* bash script to start the pipeline run.
 
-The output files are in the directory analyze_out. They are organized by sample and *process_group*.
+The output files are in the directory *analyze_out*. They are organized by sample name and *process_group*.
