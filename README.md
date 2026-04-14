@@ -3,7 +3,20 @@
 ## Intro
 
 This *bbi-scirna-analyze-ult* pipeline reads the unaligned BAM files and hash read *.tsv* files from the *bbi-scirna-demux-ult* pipeline, and processes them
-to make the required sample-specific output files.
+to make the required sample-specific output files. Use the *develop* branch.
+
+## Summary of Ultima data processing
+
+1. download the raw Ultima CRAM files: see notes in *billion_cells_project_infor
+mation* repo
+2. run the Ultima trimmer on the raw Ultima CRAM files: see the *bbi-ultima* rep
+o
+3. make symbolic links to the trimmed CRAM files: see the *bbi-scirna-demux-ult*
+ repo
+4. make a sampleheet JSON file: see the *bbi-scirna-demux/samplesheet* repo
+5. make an *experiment.config* file: see the *bbi-scirna-demux-ult* repo
+6. run the *bbi-scirna-demux-ult* pipeline: see the *bbi-scirna-demux-ult* repo
+7. run the *bbi-scirna-analyze-ult* pipeline: see the *bbi-scirna-analyze-ult* repo
 
 ## Installation
 
