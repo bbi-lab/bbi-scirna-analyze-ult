@@ -25,7 +25,7 @@ use serde::{Deserialize};
 fn set_cl_options() -> Result<clap::Command, Box<dyn std::error::Error>> {
   let cl_options = Command::new("process_hashes")
         .version(env!("CARGO_PKG_VERSION"))
-        .about("Finds hash sequence reads in BAM file.")
+        .about("Processes hash reads from .tsv file.")
         .arg(Arg::new("sample_name")  // required=true, no default
                   .required(true)
                   .short('n')
