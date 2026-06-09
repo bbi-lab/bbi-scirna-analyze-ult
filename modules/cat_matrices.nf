@@ -8,7 +8,7 @@ def cat_matrices_raw_function(item) {
   def sample_name = item['sample_name']
   def out_file = sample_name + '_counts.raw'
   def in_file_list = []
-  for( in_dir in item['in_dir_list']) {
+  for(def in_dir in item['in_dir_list']) {
     def dir_base_name = in_dir.toString().tokenize('/').last()
     def file_path = params.object_map.merge_align_bam_map[dir_base_name] + '/Solo.out/GeneFull_Ex50pAS/raw/UniqueAndMult-PropUnique.mtx'
 //    def file_path = params.object_map.merge_align_bam_map[dir_base_name] + '/Solo.out/GeneFull_Ex50pAS/raw/matrix.mtx'
@@ -76,7 +76,7 @@ def cat_matrices_filtered_function(item) {
   def sample_name = item['sample_name']
   def out_file = sample_name + '_counts.filtered'
   def in_file_list = []
-  for( in_dir in item['in_dir_list']) {
+  for(def in_dir in item['in_dir_list']) {
     def dir_base_name = in_dir.toString().tokenize('/').last()
     def file_path = params.object_map.merge_align_bam_map[dir_base_name] + '/Solo.out/GeneFull_Ex50pAS/filtered/matrix.mtx'
     /*
