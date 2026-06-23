@@ -586,7 +586,7 @@ fn main() {
   */
   for tsv_filename in tsv_filenames {
     let mut tsv_reader = csv::ReaderBuilder::new().delimiter(b'\t').from_path(&tsv_filename).expect("Error: unable to open TSV file.");
-    let _ = process_tsv_file(&hash_whitelist, &mut cells, &mut read_counts, &mut hash_counts, &mut hashdict, &mut tsv_reader, &mut num_hash, &hash_lookup);
+    let _ = process_tsv_file(&hash_whitelist, &mut cells, &mut read_counts, &mut hash_counts, &mut hashdict, &mut tsv_reader, &mut num_hash, &hash_lookup).expect("Error: bad status: process_tsv_file");
   }
 
   // dump_nested_maps(&mut hashdict);
