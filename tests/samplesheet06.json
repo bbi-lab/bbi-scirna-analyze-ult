@@ -1,0 +1,60 @@
+{
+    "json_file_version": "2.0.0",
+    "sequencer_class": "illumina",
+    "sequencer_run_directory": null,
+    "level": 3,
+    "number_lanes": 4,
+    "sample_index_list": [
+        {
+            "sample_id": "Sample01",
+            "ranges": "3-4:11:13",
+            "lanes": "1",
+            "tissue": "",
+            "genome": "Human",
+            "hash_file": "",
+            "sample_flags": "",
+            "external_sample_name": "",
+            "wrap_group": "",
+            "rt_file": "",
+            "ligation_file": "",
+            "p7_file": "",
+            "p5_file": "",
+            "library": "",
+            "process_group": "1"
+        },
+        {
+            "sample_id": "Sample02",
+            "ranges": "5-6:11:13",
+            "lanes": "1",
+            "tissue": "",
+            "genome": "Human",
+            "hash_file": "",
+            "sample_flags": "",
+            "external_sample_name": "",
+            "wrap_group": "",
+            "rt_file": "",
+            "ligation_file": "",
+            "p7_file": "",
+            "p5_file": "",
+            "library": "",
+            "process_group": "1"
+        },
+        {
+            "sample_id": "Sample01",
+            "ranges": "3-4:12:29",
+            "lanes": "1",
+            "tissue": "",
+            "genome": "Human",
+            "hash_file": "",
+            "sample_flags": "",
+            "external_sample_name": "",
+            "wrap_group": "",
+            "rt_file": "",
+            "ligation_file": "",
+            "p7_file": "",
+            "p5_file": "",
+            "library": "",
+            "process_group": "1"
+        }
+    ]
+}

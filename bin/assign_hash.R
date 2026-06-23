@@ -25,7 +25,7 @@ args = parser$parse_args()
 chisq_vs_background <- function(test_hash_matrix, hash_frequencies){
   hash_frequencies_nz = which(hash_frequencies > 0)
   hash_frequencies = hash_frequencies[hash_frequencies_nz]
-  pvals= pbapply(test_hash_matrix[,hash_frequencies_nz], 1, function(x) {
+  pvals= pbapply(test_hash_matrix[,hash_frequencies_nz,drop=FALSE], 1, function(x) {
     tryCatch({
       res = chisq.test(x, p=hash_frequencies,  simulate.p.value = FALSE)
       unlist(res[["p.value"]])
@@ -46,13 +46,13 @@ assign_hash_labels <-
            background_cell_hashes, 
            qval_thresh = 0.05, 
            downsample_rate=NULL){
-    background_hash_matrix = hash_matrix[rownames(hash_matrix) %in% background_cell_hashes,]
-    background_hash_matrix = background_hash_matrix[rowSums(background_hash_matrix)>0,]
+    background_hash_matrix = hash_matrix[rownames(hash_matrix) %in% background_cell_hashes,,drop=FALSE]
+    background_hash_matrix = background_hash_matrix[rowSums(background_hash_matrix)>0,,drop=FALSE]
 
     background_hash_frequencies = colSums(background_hash_matrix)/sum(colSums(background_hash_matrix))
     
     
-    test_hash_matrix = hash_matrix[rownames(hash_matrix) %in% test_cell_hashes,]
+    test_hash_matrix = hash_matrix[rownames(hash_matrix) %in% test_cell_hashes,,drop=FALSE]
     
     if (is.null(downsample_rate) == FALSE){
       test_hash_matrix = floor(test_hash_matrix * downsample_rate)
@@ -224,7 +224,8 @@ if (dim(corrected_hash_table)[1] != 0) {
 
   # Drop any cells with less than top to second best hash ratio cutoff if args$hash_ratio is not false 
   if (args$hash_ratio != "false") {
-    cds  <- cds[,!is.na(colData(cds)$top_to_second_best_ratio) & colData(cds)$top_to_second_best_ratio >= args$hash_ratio ]
+    hash_ratio <- as.numeric(args$hash_ratio)
+    cds  <- cds[,!is.na(colData(cds)$top_to_second_best_ratio) & colData(cds)$top_to_second_best_ratio >= hash_ratio ]
   } 
 }
 

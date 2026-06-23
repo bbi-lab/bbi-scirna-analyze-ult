@@ -29,9 +29,9 @@ if __name__ == '__main__':
   parser = argparse.ArgumentParser(description='A program that makes umi and cell statistics for the experiment dashboard.')
   parser.add_argument('-s', '--sample_name', required=True, default=None, help='Input sample name (required string(s)).')
   parser.add_argument('-c', '--umi_cutoff', required=True, default=None, help='Minimum UMI count (required integer).')
-  parser.add_argument('-f', '--fdr_cutoff', required=True, default=None, help='Maximum empty drops FDR value (required integer).')
+  parser.add_argument('-f', '--fdr_cutoff', required=True, default=None, help='Maximum empty drops FDR value (required float).')
   parser.add_argument('-u', '--input_umi_counts', required=True, default=None, help='Input umi counts tsv filename (required string(s)).')
-  parser.add_argument('-e', '--input_empty_drops_fdr', required=True, default=None, help='Input empty drops RDS filename (required string(s)).')
+  parser.add_argument('-e', '--input_empty_drops_fdr', required=True, default=None, help='Input empty drops TSV filename (required string(s)).')
   parser.add_argument('-o', '--output', required=True, default=None, help='Output JSON filename (required string(s)).')
   parser.add_argument('-v', '--version', action='version', version=program_version)
   args = parser.parse_args()
@@ -123,7 +123,8 @@ if __name__ == '__main__':
   try:
     fh = open(filename_json, 'w')
     json.dump(umi_cell_counts_dict, fh, indent=2)
+    fh.close()
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+    sys.exit(1)
 

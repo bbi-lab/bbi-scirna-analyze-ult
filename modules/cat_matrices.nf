@@ -33,7 +33,7 @@ process cat_matrices_raw {
   publishDir path: "${analyze_out}/${sample_name}", pattern: "*.cells.tsv", mode: 'copy'
   publishDir path: "${analyze_out}/${sample_name}", pattern: "*.features.tsv", mode: 'copy'
   publishDir path: "${analyze_out}/${sample_name}", pattern: "*.matrix.mtx", mode: 'copy'
-  publishDir path: "${analyze_out}/${sample_name}", pattern: "*.cells_barcode_to_wells.tsv", mode: 'copy'
+  publishDir path: "${analyze_out}/${sample_name}", pattern: "*.cells.barcode_to_wells.tsv", mode: 'copy'
 
   input:
   tuple val('sample_name'), val('out_file'), path('file')

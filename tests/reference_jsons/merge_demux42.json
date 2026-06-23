@@ -1,0 +1,50 @@
+[
+  {
+    "sample_name": "Sample01-001",
+    "out_file": "Sample01-001_011_013.merged.bam",
+    "in_file_list": [
+      "./Sample01-001_011_013-L001.bam",
+      "./Sample01-002_011_013-L002.bam"
+    ]
+  },
+  {
+    "sample_name": "Sample01-001",
+    "out_file": "Sample01-001_012_013.merged.bam",
+    "in_file_list": [
+      "./Sample01-001_012_013-L001.bam",
+      "./Sample01-002_012_013-L002.bam"
+    ]
+  },
+  {
+    "sample_name": "Sample01-002",
+    "out_file": "Sample01-002_011_014.merged.bam",
+    "in_file_list": [
+      "./Sample01-001_011_014-L001.bam",
+      "./Sample01-002_011_014-L002.bam"
+    ]
+  },
+  {
+    "sample_name": "Sample01-002",
+    "out_file": "Sample01-002_012_014.merged.bam",
+    "in_file_list": [
+      "./Sample01-001_012_014-L001.bam",
+      "./Sample01-002_012_014-L002.bam"
+    ]
+  },
+  {
+    "sample_name": "Sample01-003",
+    "out_file": "Sample01-003_011_015.merged.bam",
+    "in_file_list": [
+      "./Sample01-001_011_015-L001.bam",
+      "./Sample01-002_011_015-L002.bam"
+    ]
+  },
+  {
+    "sample_name": "Sample01-003",
+    "out_file": "Sample01-003_012_015.merged.bam",
+    "in_file_list": [
+      "./Sample01-001_012_015-L001.bam",
+      "./Sample01-002_012_015-L002.bam"
+    ]
+  }
+]

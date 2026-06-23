@@ -36,7 +36,7 @@ def expand_index_list(index_string):
     mobj = re.match(regex_pattern, index_spec)
     if(mobj == None):
       print('Error: expand_index_list: bad index specification: %s' % (index_spec))
-      sys.exit(-1)
+      sys.exit(1)
     index1 = int(mobj.group(1))
     index2 = index1
     if(mobj.group(2) != None):
@@ -102,9 +102,10 @@ def make_data_file_json(data_file_dict):
     filename_json = 'merge_align.json'
     fh = open(filename_json, 'w')
     json.dump(bam_merge_list, fh, indent=2)
+    fh.close()
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+    sys.exit(1)
 
 
 if __name__ == '__main__':

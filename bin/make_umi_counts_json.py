@@ -64,15 +64,16 @@ def make_umi_counts_file_json(umi_counts_dict):
   for sample_name in umi_counts_dict:
     umi_counts_file_list.append(umi_counts_dict[sample_name])
 
-  print(umi_counts_file_list)
+  # print(umi_counts_file_list)
 
   try:
     filename_json = 'umi_counts.json'
     fh = open(filename_json, 'w+')
     json.dump(umi_counts_file_list, fh, indent=2)
+    fh.close()
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+    sys.exit(1)
 
 
 if __name__ == '__main__':

@@ -139,15 +139,23 @@ if __name__ == '__main__':
         p7_well = 'P01-%s' % (p7_well)
       if(re.match(r'[A-H][0-9]+$', p5_well) != None):
         p5_well = 'P01-%s' % (p5_well)
-      
+     
+      error_flag = 0 
       if(not rt_well in rt_barcode_dict):
         print('Error: well_to_barcode.py: rt well index not found in dictionary.\nYou may need to increase the value of max_index in this program.')
+        error_flag = 1
       if(not lig_well in lig_barcode_dict):
         print('Error: well_to_barcode.py: ligation well index not found in dictionary.\nYou may need to increase the value of max_index in this program.')
+        error_flag = 1
       if(not p7_well in p7_barcode_dict):
         print('Error: well_to_barcode.py: p7 well index not found in dictionary.\nYou may need to increase the value of max_index in this program.')
+        error_flag = 1
       if(not p5_well in p5_barcode_dict):
         print('Error: well_to_barcode.py: p5 well index not found in dictionary.\nYou may need to increase the value of max_index in this program.')
+        error_flag = 1
+
+      if(error_flag == 1):
+        sys.exit(1)
 
       barcode = ''.join([rt_barcode_dict[rt_well], lig_barcode_dict[lig_well], p7_barcode_dict[p7_well], p5_barcode_dict[p5_well]])
       print('%s_%s_%s_%s\t%s' % (p5_well, p7_well, rt_well, lig_well, barcode), file=ofh)

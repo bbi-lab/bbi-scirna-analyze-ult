@@ -46,6 +46,16 @@ cds@rowRanges@elementMetadata@listData[['gene_expression']] <- NULL
 gene_info <- read.csv(args$gene_bed, header=FALSE, sep='\t')
 rownames(gene_info) <- gene_info$V4
 colnames(gene_info) <- c('chromosome', 'bp1', 'bp2', 'id', 'integer', 'gene_strand')
+
+missing_genes <- setdiff(rownames(rowData(cds)), rownames(gene_info))
+if (length(missing_genes) > 0) {
+  stop(
+    'Gene BED is missing ', length(missing_genes),
+    ' CDS gene(s). Examples: ',
+    paste(head(missing_genes, 10), collapse=', ')
+  )
+}
+
 rowData(cds) <- cbind(rowData(cds), gene_info[rownames(rowData(cds)), c('id', 'chromosome', 'bp1', 'bp2', 'gene_strand')])
 
 #
@@ -110,6 +120,11 @@ for (m in meta_types) {
 }
 
 cds <- cds[,Matrix::colSums(counts(cds)) != 0]
+
+if (ncol(cds) == 0) {
+  stop("No nonzero-count cells remain after filtering.")
+}
+
 cds <- estimate_size_factors(cds)
 
 cds <- detect_genes(cds)
