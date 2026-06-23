@@ -22,6 +22,7 @@ process make_umi_counts {
   tuple val(sample_name), path("*_umi_counts.tsv"), emit: umi_counts_tsv
 
 
+  script:
   """
   # bash watch for errors
   set -ueo pipefail
