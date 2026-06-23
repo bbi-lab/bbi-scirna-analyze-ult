@@ -5,7 +5,7 @@ process run_scrublet {
   maxRetries 2
 
   publishDir path: "${analyze_out}/${sample_name}", pattern: "*_scrublet_out.csv", mode: 'copy'
-  publishDir path: "${analyze_out}/${sample_name}", pattern: "run_scrublet.lot", mode: 'copy'
+  publishDir path: "${analyze_out}/${sample_name}", pattern: "run_scrublet.log", mode: 'copy'
   publishDir path: "${analyze_out}/${sample_name}", pattern: "${sample_name}_cds.raw.mobs", mode: 'copy'
   publishDir path: "${analyze_out}/${sample_name}", pattern: "${sample_name}_cds.raw.col_data.tsv", mode: 'copy'
 
