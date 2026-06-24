@@ -38,7 +38,7 @@ process merge_starsolo_reports {
   output:
   tuple val(sample_name), path("*.starsolo.cell_reads.stats"), emit: cell_reads_stats
   tuple val(sample_name), path("*Summary.txt"), emit: starsolo_summary
-  tuple path("*Features.stats"), emit: dummy
+  tuple val(sample_name), path("*Features.stats"), emit: dummy
 
   script:
   """
