@@ -185,11 +185,11 @@ def make_sample_stats_dict(sample_name_list, cellread_statistics_dict, umi_cell_
   sample_stats_dict = dict()
   for sample_name in sample_name_list:
     total_reads              = cellread_statistics_dict[sample_name]['sum_counted_reads_unique'] + cellread_statistics_dict[sample_name]['sum_counted_reads_multi']
+    total_umis               = cellread_statistics_dict[sample_name]['total_umi']
     if(total_reads > 0):
       duplication_rate       = (1.0 - (float(total_umis) / float(total_reads))) * 100.0
     else:
       duplication_rate       = 0.0
-    total_umis               = cellread_statistics_dict[sample_name]['total_umi']
     median_umis              = umi_cell_statistics_dict[sample_name]['umis_median']
     median_mitochondial_umis = umi_cell_statistics_dict[sample_name]['umis_mito_median']
     cells_100_umis           = umi_cell_statistics_dict[sample_name]['cell_counts_umi_100_umi_cutoff']
