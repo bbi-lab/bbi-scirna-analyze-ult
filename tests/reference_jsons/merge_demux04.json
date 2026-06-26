@@ -1,54 +1,16 @@
 [
   {
+    "sample_name": "Sample01-001",
     "out_file": "Sample01-001_011_013.merged.bam",
     "in_file_list": [
-      "./Sample01-001_011_013-L001.bam",
-      "./Sample01-002_011_013-L002.bam"
+      "./Sample01-001_011_013-L001.bam"
     ]
   },
   {
-    "out_file": "Sample01-001_012_013.merged.bam",
+    "sample_name": "Sample02-001",
+    "out_file": "Sample02-001_011_013.merged.bam",
     "in_file_list": [
-      "./Sample01-001_012_013-L001.bam",
-      "./Sample01-002_012_013-L002.bam"
-    ]
-  },
-  {
-    "out_file": "Sample01-001_011_014.merged.bam",
-    "in_file_list": [
-      "./Sample01-001_011_014-L001.bam",
-      "./Sample01-002_011_014-L002.bam"
-    ]
-  },
-  {
-    "out_file": "Sample01-001_012_014.merged.bam",
-    "in_file_list": [
-      "./Sample01-001_012_014-L001.bam",
-      "./Sample01-002_012_014-L002.bam"
-    ]
-  },
-  {
-    "out_file": "Sample01-002_011_015.merged.bam",
-    "in_file_list": [
-      "./Sample01-003_011_015-L003.bam"
-    ]
-  },
-  {
-    "out_file": "Sample01-002_012_015.merged.bam",
-    "in_file_list": [
-      "./Sample01-003_012_015-L003.bam"
-    ]
-  },
-  {
-    "out_file": "Sample02-002_011_016.merged.bam",
-    "in_file_list": [
-      "./Sample02-004_011_016-L004.bam"
-    ]
-  },
-  {
-    "out_file": "Sample02-002_012_016.merged.bam",
-    "in_file_list": [
-      "./Sample02-004_012_016-L004.bam"
+      "./Sample02-001_011_013-L001.bam"
     ]
   }
 ]

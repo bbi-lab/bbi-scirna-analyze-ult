@@ -1,7 +1,7 @@
 {
   "Human": {
-     "genes_bed": "net/bbi/vol1/data/genomes_stage/human/human_rna/latest.genes.bed",
-     "star_index": "net/bbi/vol1/data/genomes_stage/human/human_star_2_7",
+     "genes_bed": "/net/bbi/vol1/data/genomes_stage/human/human_rna/latest.genes.bed",
+     "star_index": "/net/bbi/vol1/data/genomes_stage/human/human_star_2_7",
      "star_memory": 60
   },
   "Mouse": {

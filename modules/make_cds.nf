@@ -35,6 +35,10 @@ process make_cds_raw {
 }
 
 
+/*
+** This is unmaintained: there may be errors changes to make_cds_raw that
+** were not transferred to make_cds_filtered.
+**
 process make_cds_filtered {
   errorStrategy 'ignore'
 
@@ -70,4 +74,5 @@ process make_cds_filtered {
   ${empty_drops}
   """
 }
+*/
 

@@ -184,7 +184,7 @@ def make_stats_bundle(starsolo_path, features, summary):
       counts_dict[key] = -1
     elif(key == 'Q30 Bases in CB+UMI'):
       continue
-    elif(key == '30 Bases in RNA read'):
+    elif(key == 'Q30 Bases in RNA read'):
       continue
     elif(key == 'Reads Mapped to Genome: Unique+Multiple'):
       counts_dict[key] = int(float(summary[key]) * num_read) if float_test(summary[key]) else summary[key]
@@ -254,7 +254,7 @@ def merge_stats_bundle_dicts(stats_bundle_dict):
     for key in stats_bundle:
       count = stats_bundles_merged.setdefault(key, 0)
       val = stats_bundle[key] if (not isinstance(stats_bundle[key], str)) and (not math.isnan(stats_bundle[key])) else 0
-      print('data: %s  val: %f' % (dataname, val), file=sys.stderr)
+      # print('data: %s  val: %f' % (dataname, val), file=sys.stderr)
       stats_bundles_merged[key] = count + val
 
   return(stats_bundles_merged)
@@ -347,7 +347,7 @@ if __name__ == '__main__':
     dataname = os.path.basename(args.input[i])
     if(dataname in stats_bundle_dict):
       print('Error: basename is not distinct: \'%s\'' % (dataname), file=sys.stderr)
-      sys.exit(-1)
+      sys.exit(1)
     stats_bundle_dict[dataname] = stats_bundle
     
   stats_bundles_merged = merge_stats_bundle_dicts(stats_bundle_dict)

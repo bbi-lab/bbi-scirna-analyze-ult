@@ -24,6 +24,7 @@ def process_file(in_filename, sample_name):
   cbIndex = None
   cbMatchIndex = None
   nUMIuniqueIndex = None
+  nUMImultiIndex = None
   exonicIndex = None
   intronicIndex = None
   mitoIndex = None
@@ -62,7 +63,7 @@ def process_file(in_filename, sample_name):
        intronicIndex == None or
        mitoIndex == None):
       print('Error: missing at least one column in the list \'cbIndex\', \'cbMatchIndex\', \'nUMIuniqueIndex\', \'nUMImultiIndex\', \'exonicIndex\', \'intronicIndex\', \'mitoIndex\'', file=sys.stderr)
-      sys.exit(-1)
+      sys.exit(1)
 
 
     # Write header row.

@@ -8,7 +8,7 @@ def align_bam_function(item) {
 }
 
 
-align_cpus = params.align_cpus < 8 ? params.align_cpus : 8
+def align_cpus = params.align_cpus < 8 ? params.align_cpus : 8
 def analyze_out = params.output_dir + '/analyze_out'
 
 process align_bams {

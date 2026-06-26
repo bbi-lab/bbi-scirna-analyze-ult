@@ -1,0 +1,23 @@
+[
+  {
+    "sample_name": "Sample01-001",
+    "out_file": "Sample01-001_011_013.merged.bam",
+    "in_file_list": [
+      "./Sample01-001_011_013-L001.bam"
+    ]
+  },
+  {
+    "sample_name": "Sample01-002",
+    "out_file": "Sample01-002_011_013.merged.bam",
+    "in_file_list": [
+      "./Sample01-002_011_013-L002.bam"
+    ]
+  },
+  {
+    "sample_name": "Sample02-001",
+    "out_file": "Sample02-001_011_013.merged.bam",
+    "in_file_list": [
+      "./Sample02-001_011_013-L001.bam"
+    ]
+  }
+]

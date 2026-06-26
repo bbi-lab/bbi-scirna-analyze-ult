@@ -3,10 +3,10 @@ def merge_starsolo_reports_function(item) {
   def out_file = sample_name + '.starsolo.cell_reads.stats'
   def in_dir_list = []
   def in_root_list = []
-  for( in_dir in item['in_dir_list']) {
+  for(def in_dir in item['in_dir_list']) {
     def dir_base_name = in_dir.toString().tokenize('/').last()
-    root_path = params.object_map.merge_align_bam_map[dir_base_name]
-    file_path = params.object_map.merge_align_bam_map[dir_base_name] + '/Solo.out/GeneFull_Ex50pAS/CellReads.stats'
+    def root_path = params.object_map.merge_align_bam_map[dir_base_name]
+    def file_path = params.object_map.merge_align_bam_map[dir_base_name] + '/Solo.out/GeneFull_Ex50pAS/CellReads.stats'
     /*
     ** If the file/value does not exist in
     ** params.object_map.merge_bam_map,
@@ -38,7 +38,7 @@ process merge_starsolo_reports {
   output:
   tuple val(sample_name), path("*.starsolo.cell_reads.stats"), emit: cell_reads_stats
   tuple val(sample_name), path("*Summary.txt"), emit: starsolo_summary
-//  tuple path("*Features.stats"), path("*Summary.txt"), emit: dummy
+  tuple val(sample_name), path("*Features.stats"), emit: dummy
 
   script:
   """

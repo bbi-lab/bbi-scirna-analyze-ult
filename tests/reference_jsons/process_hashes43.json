@@ -1,0 +1,38 @@
+[
+  {
+    "sample_name": "Sample01-001",
+    "in_file": "Sample01-001_011_013.hash_reads.merged.tsv",
+    "hash_file": "hash01",
+    "out_root": "Sample01-001_011_013"
+  },
+  {
+    "sample_name": "Sample01-001",
+    "in_file": "Sample01-001_012_013.hash_reads.merged.tsv",
+    "hash_file": "hash01",
+    "out_root": "Sample01-001_012_013"
+  },
+  {
+    "sample_name": "Sample02-002",
+    "in_file": "Sample02-002_011_014.hash_reads.merged.tsv",
+    "hash_file": "hash02",
+    "out_root": "Sample02-002_011_014"
+  },
+  {
+    "sample_name": "Sample02-002",
+    "in_file": "Sample02-002_012_014.hash_reads.merged.tsv",
+    "hash_file": "hash02",
+    "out_root": "Sample02-002_012_014"
+  },
+  {
+    "sample_name": "Sample03-003",
+    "in_file": "Sample03-003_011_015.hash_reads.merged.tsv",
+    "hash_file": "hash03",
+    "out_root": "Sample03-003_011_015"
+  },
+  {
+    "sample_name": "Sample03-003",
+    "in_file": "Sample03-003_012_015.hash_reads.merged.tsv",
+    "hash_file": "hash03",
+    "out_root": "Sample03-003_012_015"
+  }
+]

@@ -1,0 +1,23 @@
+[
+  {
+    "sample_name": "Sample01-001",
+    "in_matrix": "Sample01-001_counts.raw.matrix.mtx",
+    "in_features": "Sample01-001_counts.raw.features.tsv",
+    "in_barcodes": "Sample01-001_counts.raw.cells.tsv",
+    "out_file": "Sample01-001_umi_counts.tsv"
+  },
+  {
+    "sample_name": "Sample01-002",
+    "in_matrix": "Sample01-002_counts.raw.matrix.mtx",
+    "in_features": "Sample01-002_counts.raw.features.tsv",
+    "in_barcodes": "Sample01-002_counts.raw.cells.tsv",
+    "out_file": "Sample01-002_umi_counts.tsv"
+  },
+  {
+    "sample_name": "Sample01-003",
+    "in_matrix": "Sample01-003_counts.raw.matrix.mtx",
+    "in_features": "Sample01-003_counts.raw.features.tsv",
+    "in_barcodes": "Sample01-003_counts.raw.cells.tsv",
+    "out_file": "Sample01-003_umi_counts.tsv"
+  }
+]

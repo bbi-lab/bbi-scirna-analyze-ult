@@ -4,11 +4,12 @@ import sys
 import json
 import argparse
 import re
+from collections import defaultdict
 
 #
 # Program version string.
 #
-program_version = '0.2.0'
+program_version = '0.3.0'
 
 #
 # Merge the lane-specific BAM files that belong to a combination
@@ -35,8 +36,8 @@ def expand_index_list(index_string):
   for index_spec in index_string.split(','):
     mobj = re.match(regex_pattern, index_spec)
     if(mobj == None):
-      print('Error: expand_index_list: bad index specification: %s' % (index_spec))
-      sys.exit(-1)
+      print('Error: expand_index_list: bad index specification: %s' % (index_spec), file=sys.stderr)
+      sys.exit(1)
     index1 = int(mobj.group(1))
     index2 = index1
     if(mobj.group(2) != None):
@@ -53,77 +54,52 @@ def expand_index_list(index_string):
 # json_data['sample_index_list']['ranges']
 # json_data['sample_index_list']['p7_file']
 # json_data['sample_index_list']['p5_file']
-#
-# A sample in a process group can be spread across
-# multiple lanes and PCR pairs and so can be in more
-# than one entry in the sample_index_list. Therefore
-# the entries for the sample+process group must be
-# collected into a single entry in the output JSON
-# file.
-#
-# Make a dictionary as follows
-#   data_file_dict[<process_group>][<sample_name>][<pcr_pair_string>][<lane_index_int>] = 1 (a flag)
-#
-def get_data_file_dict(json_data):
-  data_file_dict = {}
-  for sample_index_dict in json_data['sample_index_list']:
-    # Gather relevant values.
-    index_ranges = sample_index_dict['ranges'].split(':')
-    process_group = sample_index_dict['process_group']
-    sample_name = sample_index_dict['sample_id']
-    p7_index_list = expand_index_list(index_ranges[1])
-    p5_index_list = expand_index_list(index_ranges[2])
-    lane_index_list = expand_index_list(sample_index_dict['lanes'])
-    # Add process group to data_file_dict, if necessary.
-    if(not process_group in data_file_dict):
-      data_file_dict[process_group] = {}
-    # Add sample name to data_file_dict[process_group] dict, if necessary.
-    if(not sample_name in data_file_dict[process_group]):
-       data_file_dict[process_group][sample_name] = {}
-    # Loop through p7 and p5 indices to make PCR pairs.
-    for p7_index in p7_index_list:
-      for p5_index in p5_index_list:
-        pcr_pair = '%03d_%03d' % (int(p7_index), int(p5_index))
-        # Add PCR pair to data_file_dict[process_group][sample_name] dict, if necessary.
-        if(not pcr_pair in data_file_dict[process_group][sample_name]):
-          data_file_dict[process_group][sample_name][pcr_pair] = {}
-        # Loop through lane indices.
-        for lane_index in lane_index_list:
-          # Add lane to data_file_dict[process_group][sample_name][pcr_pair] dict, if necessary.
-          if(not lane_index in data_file_dict[process_group][sample_name][pcr_pair]):
-            data_file_dict[process_group][sample_name][pcr_pair][int(lane_index)] = 1
-  return(data_file_dict)
+
+def iter_pcr_pairs(ranges):
+  fields = ranges.split(':')
+  if len(fields) != 3:
+    raise ValueError('bad ranges field: %s' % ranges)
+
+  p7_list = expand_index_list(fields[1])
+  p5_list = expand_index_list(fields[2])
+
+  for p7 in p7_list:
+    for p5 in p5_list:
+      yield '%03d_%03d' % (p7, p5)
 
 
-#
-# Merge the lane-specific BAM files that belong to a combination
-# of sample+process_group+pcr_pair. As a result, the output file
-# contains the reads for sample_name, process_group, and pcr_pair.
-#
-def make_data_file_json(data_file_dict, bam_path):
-  bam_merge_list = []
-  for process_group in data_file_dict.keys():
-    for sample_name in data_file_dict[process_group].keys():
-      for pcr_pair in data_file_dict[process_group][sample_name].keys():
-        merge_dict = {}
-        # 'sample_name' consists of <sample_name>-<process_group> so it's distinct
-        merge_dict['sample_name'] = '%s-%03d' % (sample_name, int(process_group))
-        out_filename = '%s-%03d_%s.merged.bam' % (sample_name, int(process_group), pcr_pair)
-        merge_dict['out_file'] = out_filename
-        in_file_list = []
-        merge_dict['in_file_list'] = in_file_list
-        for lane_index in data_file_dict[process_group][sample_name][pcr_pair].keys():
-          in_file = '%s/%s-%03d_%s-L%03d.bam' % (bam_path, sample_name, lane_index, pcr_pair, lane_index)
-          merge_dict['in_file_list'].append(in_file)
-        bam_merge_list.append(merge_dict)
+def get_merge_map(json_data):
+  merge_map = defaultdict(set)
 
-  try:
-    filename_json = 'merge_demux.json'
-    fh = open(filename_json, 'w')
-    json.dump(bam_merge_list, fh, indent=2)
-  except:
-    print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+  for row in json_data['sample_index_list']:
+    sample_id = row['sample_id']
+    process_group = row['process_group']
+    lanes = expand_index_list(row['lanes'])
+
+    for pcr_pair in iter_pcr_pairs(row['ranges']):
+      key = (sample_id, process_group, pcr_pair)
+      merge_map[key].update(lanes)
+
+  return merge_map
+
+def make_data_file_json(merge_map, bam_path):
+  merge_jobs = []
+
+  for (sample_id, process_group, pcr_pair), lanes in sorted(merge_map.items()):
+    sample_full = '%s-%03d' % (sample_id, int(process_group))
+
+    merge_jobs.append({
+      'sample_name': sample_full,
+      'out_file': '%s_%s.merged.bam' % (sample_full, pcr_pair),
+      'in_file_list': [
+        '%s/%s-%03d_%s-L%03d.bam' %
+        (bam_path, sample_id, lane, pcr_pair, lane)
+        for lane in sorted(lanes)
+      ],
+    })
+
+  with open('merge_demux.json', 'w') as fh:
+    json.dump(merge_jobs, fh, indent=2)
 
 
 if __name__ == '__main__':
@@ -139,11 +115,12 @@ if __name__ == '__main__':
   #
   json_data = read_json(args.input)
 #  print(json.dumps(json_data['sample_index_list'], indent=2))
-  data_file_dict = get_data_file_dict(json_data)
+#  data_file_dict = get_data_file_dict(json_data)
 
 #  print(json.dumps(data_file_dict, indent=2))
 
-  make_data_file_json(data_file_dict, args.bam_path)
+#  make_data_file_json(data_file_dict, args.bam_path)
 
-
+  merge_map = get_merge_map(json_data)
+  make_data_file_json(merge_map, args.bam_path)
 

@@ -1,0 +1,4 @@
+sample_name,genome,rt_wells,p7_wells,p5_wells,lanes,process_group
+Sample01,Human,P01-A03:P01-A04,A11:A12,E02:F02,1:2,1
+Sample01,Human,P01-A03:P01-A04,A11:A12,E02:F02,3:4,2
+Sample01,Human,P01-A03:P01-A04,A11:A12,E02:F02,5:6,3

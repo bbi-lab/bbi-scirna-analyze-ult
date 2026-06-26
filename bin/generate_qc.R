@@ -449,7 +449,7 @@ gen_knee <- function(sample_name, umis_file, emptydrops_data, cutoff, pipeline_n
 
     if(is.null(cutoff)) {
       background_call = Mclust(data.frame(log10(df$n.umi)),G=c(2))
-      cutoff = min(df[which(background_call$classification == 2 & background_call$uncertainty < 0.005),3])
+      cutoff = min(df[which(background_call$classification == 2 & background_call$uncertainty < 0.005),2])
     } 
 
     plot = NULL
@@ -504,6 +504,10 @@ message('gen_knee: empty drops no')
 #     writeLines(c(as.character(cutoff)), fileConn)
 #     close(fileConn)
   }
+
+  fileConn<-file(paste0(sample_name, "_umi_cutoff.txt"))
+  writeLines(c(as.character(cutoff)), fileConn)
+  close(fileConn)
 
   return(plot)
 }
@@ -581,7 +585,7 @@ gen_barnyard_plot_generic <- function(cds, sample_name, genome) {
 }
 
 
-make_empty_plots_and_files <- function(sample_name, umi_cutoff) {
+make_empty_plots_and_files <- function(sample_name, hash, umi_cutoff) {
   # Generate empty plots if error
   file_name <- paste0(sample_name, "_umi.png")
   ggp_obj <- ggplot() + theme_void() + geom_text(aes(x = 1, y = 1, label = "Insufficient cells for UMI plot"))
@@ -654,21 +658,22 @@ bbi_sci_gen_plots <- function(sample_name, sample_path, umis_file, emptydrops_fi
       # We could not load the cds so there is no point in trying
       # to make informative plots. Make 'empty' plots and exit.
       #
-      make_empty_plots_and_files(sample_name, cutoff)
+      make_empty_plots_and_files(sample_name, hash, cutoff)
  
       #
       # We may want to return '0', if we want the Nextflow process
       # to continue running. On the other hand, the absence of a
       # cds would seem to be near catastrophic.
       #
-      return(-1)
+      # return(-1)
+      stop('Error: unable to load monocle objects.')
     })
 
   #
   # Check if cds has zero cells.
   #
   if(nrow(colData(samp_cds)) == 0) {
-    make_empty_plots_and_files(sample_name, cutoff)
+    make_empty_plots_and_files(sample_name, hash, cutoff)
     return(0)
   }
 
@@ -750,10 +755,6 @@ bbi_sci_gen_plots <- function(sample_name, sample_path, umis_file, emptydrops_fi
   message('make knee plots')
   knee_plot <- gen_knee(sample_name, umis_file, emptydrops_data, cutoff, pipeline_name)
   ggsave(paste0(sample_name, "_knee_plot.png"), plot = knee_plot, units = "in", width = 3.5*1.3, height = 3.5)
-
-  fileConn<-file(paste0(sample_name, "_umi_cutoff.txt"))
-  writeLines(c(as.character(cutoff)), fileConn)
-  close(fileConn)
 
   #
   # Make barnyard plots.

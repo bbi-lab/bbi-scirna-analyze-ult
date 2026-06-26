@@ -112,7 +112,7 @@ def make_genome_files_json(genome_files_dict):
     json.dump(genome_files_list, fh, indent=2)
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+    sys.exit(1)
 
 
 if __name__ == '__main__':

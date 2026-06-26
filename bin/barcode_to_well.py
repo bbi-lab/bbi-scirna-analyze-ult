@@ -140,14 +140,22 @@ if __name__ == '__main__':
       p7_code = barcode[14:21]
       p5_code = barcode[21:]
 
+      error_flag = 0
       if(not rt_code in rt_well_dict):
         print('Error: barcode_to_well.py: rt well index not found in dictionary.\nYou may need to increase the value of max_index in this program.')
+        error_flag = 1
       if(not lig_code in lig_well_dict):
         print('Error: barcode_to_well.py: lig well index not found in dictionary.\nYou may need to increase the value of max_index in this program.')
+        error_flag = 1
       if(not p7_code in p7_well_dict):
         print('Error: barcode_to_well.py: p7 well index not found in dictionary.\nYou may need to increase the value of max_index in this program.')
+        error_flag = 1
       if(not p5_code in p5_well_dict):
         print('Error: barcode_to_well.py: p5 well index not found in dictionary.\nYou may need to increase the value of max_index in this program.')
+        error_flag = 1
+
+      if(error_flag == 1 ):
+        sys.exit(1)
 
       print('%s\t%s_%s_%s_%s' % (barcode, p5_well_dict[p5_code], p7_well_dict[p7_code], rt_well_dict[rt_code], lig_well_dict[lig_code]), file=ofh)
 

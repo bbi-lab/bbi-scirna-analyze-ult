@@ -34,13 +34,13 @@ process run_empty_drops {
     else
       # make an empty emptyDrops.RDS file
       Rscript -e 'note <- "emptyDrops failed"; saveRDS(note, file="${sample_name}_emptyDrops.RDS")'
-      echo 'cell\tFDR' > ${sample_name}_empty_drops_fdr.tsv
+      printf 'cell\tFDR' > ${sample_name}_empty_drops_fdr.tsv
       echo "emptyDrops failed with error code \$retVal" >> ${sample_name}_run_emptyDrops.log
     fi
   else
     # make an empty emptyDrops.RDS file
     Rscript -e 'note <- "emptyDrops was skipped"; saveRDS(note, file="${sample_name}_emptyDrops.RDS")'
-    echo 'cell\tFDR' > ${sample_name}_empty_drops_fdr.tsv
+    printf 'cell\tFDR' > ${sample_name}_empty_drops_fdr.tsv
     echo "emptyDrops skipped by request" >> ${sample_name}_run_emptyDrops.log
   fi
   """

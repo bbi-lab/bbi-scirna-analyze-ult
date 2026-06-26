@@ -36,7 +36,7 @@ def expand_index_list(index_string):
     mobj = re.match(regex_pattern, index_spec)
     if(mobj == None):
       print('Error: expand_index_list: bad index specification: %s' % (index_spec), file=sys.stderr)
-      sys.exit(-1)
+      sys.exit(1)
     index1 = int(mobj.group(1))
     index2 = index1
     if(mobj.group(2) != None):
@@ -69,7 +69,7 @@ def make_sample_hash_dict(json_data):
       hash_file_list = sample_hash_dict[process_group][sample_name]
       if(not all(x==hash_file_list[0] for x in hash_file_list)):
         print('Error: inconsistent hash_file_names for sample \'%s\'' % (sample_name), file=sys.stderr)
-        sys.exit(-1)
+        sys.exit(1)
 
   return(sample_hash_dict)
 
@@ -145,9 +145,10 @@ def make_data_file_json(data_file_dict, sample_hash_dict):
     filename_json = 'process_hashes.json'
     fh = open(filename_json, 'w')
     json.dump(hash_tsv_list, fh, indent=2)
+    fh.close()
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+    sys.exit(1)
 
 
 if __name__ == '__main__':

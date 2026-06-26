@@ -36,7 +36,7 @@ def expand_index_list(index_string):
     mobj = re.match(regex_pattern, index_spec)
     if(mobj == None):
       print('Error: expand_index_list: bad index specification: %s' % (index_spec))
-      sys.exit(-1)
+      sys.exit(1)
     index1 = int(mobj.group(1))
     index2 = index1
     if(mobj.group(2) != None):
@@ -95,14 +95,14 @@ def get_data_file_dict(samplesheet_data, genomes_data):
       sample_names_processed.append(sample_name_full)
     else:
       if(genome != data_dict_dict[sample_name_full]['genome']):
-        print('Error: inconsistent genome values for %s' % (sample_name_full))
-        sys.exit(-1)
+        print('Error: inconsistent genome values for %s' % (sample_name_full), file=sys.stderr)
+        sys.exit(1)
       if(hash_file != data_dict_dict[sample_name_full]['hash_file']):
-        print('Error: inconsistent hash_file values for %s' % (sample_name_full))
-        sys.exit(-1)
+        print('Error: inconsistent hash_file values for %s' % (sample_name_full), file=sys.stderr)
+        sys.exit(1)
       if(sample_flags != data_dict_dict[sample_name_full]['sample_flags']):
-        print('Error: inconsistent sample_flag values for %s' % (sample_name_full))
-        sys.exit(-1)
+        print('Error: inconsistent sample_flag values for %s' % (sample_name_full), file=sys.stderr)
+        sys.exit(1)
   return(data_dict_list)
 
 
@@ -116,9 +116,10 @@ def make_data_file_json(data_file_dict_list):
     filename_json = 'sample_map.json'
     fh = open(filename_json, 'w')
     json.dump(data_file_dict_list, fh, indent=2)
+    fh.close()
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+    sys.exit(1)
 
 
 if __name__ == '__main__':

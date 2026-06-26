@@ -1,0 +1,26 @@
+[
+  {
+    "sample_name": "Sample01-001",
+    "in_file": "Sample01-001_011_013.merged.bam"
+  },
+  {
+    "sample_name": "Sample01-001",
+    "in_file": "Sample01-001_012_013.merged.bam"
+  },
+  {
+    "sample_name": "Sample02-002",
+    "in_file": "Sample02-002_011_014.merged.bam"
+  },
+  {
+    "sample_name": "Sample02-002",
+    "in_file": "Sample02-002_012_014.merged.bam"
+  },
+  {
+    "sample_name": "Sample03-003",
+    "in_file": "Sample03-003_011_015.merged.bam"
+  },
+  {
+    "sample_name": "Sample03-003",
+    "in_file": "Sample03-003_012_015.merged.bam"
+  }
+]

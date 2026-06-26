@@ -51,10 +51,13 @@ pub mod barcode_utils {
   */
   for result in tsv_reader.deserialize() {
     let record: Record = result?;
-    if(hash_map.contains_key(&record.hash_barcode)) {
+//    if(hash_map.contains_key(&record.hash_barcode)) {
+    let hash_barcode = record.hash_barcode.to_ascii_uppercase();
+    if(hash_map.contains_key(&hash_barcode)) {
       panic!("Error: read_barcode_file: duplicate barcode string in file {:#?}", file_path);
     }
-    hash_map.entry(record.hash_barcode.to_owned()).or_insert(record.hash_name.to_string());
+//    hash_map.entry(record.hash_barcode.to_owned()).or_insert(record.hash_name.to_string());
+    hash_map.entry(hash_barcode).or_insert(record.hash_name.to_string());
   }
 
   Ok(hash_map)

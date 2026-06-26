@@ -34,8 +34,8 @@ def expand_index_list(index_string):
   for index_spec in index_string.split(','):
     mobj = re.match(regex_pattern, index_spec)
     if(mobj == None):
-      print('Error: expand_index_list: bad index specification: %s' % (index_spec))
-      sys.exit(-1)
+      print('Error: expand_index_list: bad index specification: %s' % (index_spec), file=sys.stderr)
+      sys.exit(1)
     index1 = int(mobj.group(1))
     index2 = index1
     if(mobj.group(2) != None):
@@ -92,9 +92,10 @@ def make_data_file_json(data_file_dict):
     filename_json = 'star_align.json'
     fh = open(filename_json, 'w')
     json.dump(star_align_list, fh, indent=2)
+    fh.close()
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+    sys.exit(1)
 
 
 if __name__ == '__main__':
@@ -110,7 +111,7 @@ if __name__ == '__main__':
 #  print(json.dumps(json_data['sample_index_list'], indent=2))
   data_file_dict = get_data_file_dict(json_data)
 
-#  print(json.dumps(data_file_dict, indent=2))
+  #  print(json.dumps(data_file_dict, indent=2))
 
   make_data_file_json(data_file_dict )
 

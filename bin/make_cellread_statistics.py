@@ -14,6 +14,7 @@ import argparse
 import statistics
 import csv
 import json
+import re
 
 
 #
@@ -23,6 +24,7 @@ program_version = '0.1.0'
 
 
 def process_tsv(filename, sample_name, umi_cutoff):
+  pobj = re.compile(r'^CBnotInPasslist')
   irow = 0
   sum_genome_unique  = 0.0
   sum_genome_multi   = 0.0
@@ -37,8 +39,9 @@ def process_tsv(filename, sample_name, umi_cutoff):
   all_umi_list       = list()
   with open(filename, 'r') as fp:
     tsv_reader = csv.DictReader(fp, delimiter='\t')
-    header = tsv_reader.__next__()
     for row in tsv_reader:
+      if(pobj.match(row['CB']) != None):
+         continue
       sum_genome_unique   += float(row['genomeU'])
       sum_genome_multi    += float(row['genomeM'])
       sum_feature_unique  += float(row['featureU'])
@@ -82,9 +85,10 @@ def make_umi_statistics_json(statistics_dict, filename_json):
   try:
     fh = open(filename_json, 'w')
     json.dump(statistics_dict, fh, indent=2)
+    fh.close()
   except:
     print('Error: unable to write output file \"%s\"' % (filename_json), file=sys.stderr)
-    sys.exit(-1)
+    sys.exit(1)
 
 
 if __name__ == '__main__':

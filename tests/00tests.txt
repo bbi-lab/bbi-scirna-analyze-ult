@@ -1,40 +1,11 @@
-process groups: 1
-samples: 1
-pcr_pairs: 
+== Test the json generating programs.
 
-process_groups      samples      lanes      pcr_pairs     notes
-1                   1            1          1             1 lane run
-1                   1            1          4             1 lane run; 2 rows with different pcr pairs
+The 'reference' output json files are in reference_jsons. I reviewed these output files with my best
+effort.
 
-1                   1            4          4             4 lane run; 1 lane loaded
-1                   1            4          4             4 lane run; 4 lanes loaded
+The test samplesheet files are samplesheet*.csv.
 
-1                   2            4          4             4 lane run; 1 lane loaded
-1                   2            4          4             4 lane run; 4 lanes loaded
-
-1                   2            4          4             4 lane run; different pcr_pairs in different lanes
-
-
-2                   4            4          8             4 lane run; 2 samples in each process group; 1 sample in each of the process groups has the same name; samples distinguished by pcr_pairs (not lanes)
-
-2                   4            4          8             4 lane run; 2 samples in each process group; 1 sample in each of the process groups has the same name; samples distinguished by lanes (not pcr_pairs)
-
-2                   4            4          8             4 lane run; 2 samples in each process group; 1 sample in each of the process groups has the same name; samples distinguished by pcr_pairs and lanes
-
-
-number      process_groups      samples      lanes      rt_wells      p7_wells      p5_wells      hash_file      notes
-00          1                   1            1          2             2             2             -              1 row
-
-01          1                   1            1          2             2             2             -              2 rows split by p5_wells
-
-02          1                   1            4          2             2             2             -              2 rows split by p5_wells and lanes
-
-03          2                   1            4          2             2             2             -              2 rows split by process_group, p5_wells, and lanes
-
-04          2                   2            4          2             2             4             -              4 rows split by process_group, p5_wells, and lanes in more complex arrangement
-
-05          2                   2            4          2             2             4             yes            4 rows split by process_group, p5_wells, and lanes in more complex arrangement with one hash sample
-
-06          2                   2            4          2             2             4             yes            4 rows split by process_group, p5_wells, and lanes in more complex arrangement with two hash samples and two hash files
-
+The script run01.sh converts these samplesheet*.csv files into samplesheet*.json files.
+The script run02.sh runs the make_*_json.py scripts and stores the output files in the directory
+test_jsons.
 
