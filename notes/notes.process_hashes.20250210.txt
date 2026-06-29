@@ -1,7 +1,0 @@
-== Python script for setting up JSON file for input to process_hashes process.
-
-o  check samplesheet json file for hashed sample(s)
-     o  gather samples and their hash_file values by process_group
-     o  check that hash_file values are consistent by sample
-     o  make_trim_bam_json.py has the essential functionality, I
-        believe. It needs additions for storing the hash_file path.
