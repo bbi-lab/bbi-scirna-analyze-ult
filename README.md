@@ -3,7 +3,7 @@
 ## Intro
 
 This *bbi-scirna-analyze-ult* pipeline reads the unaligned BAM files and hash read *.tsv* files from the *bbi-scirna-demux-ult* pipeline, and processes them
-to make the required sample-specific output files. Use the *develop* branch.
+to make the required sample-specific output files. Use the *main* branch.
 
 ## Summary of Ultima data processing
 
