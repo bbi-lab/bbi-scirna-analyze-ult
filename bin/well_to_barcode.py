@@ -115,7 +115,7 @@ def make_well_encoder(max_index):
 
 if __name__ == '__main__':
 
-  parser = argparse.ArgumentParser(description='A program to convert base 4 encoded barcode index string to string of well names.')
+  parser = argparse.ArgumentParser(description='A program to convert well names to base 4 encoded barcode index string.')
   parser.add_argument('-i', '--input_file', required=True, help='Input filename.')
   parser.add_argument('-o', '--output_file', required=True, help='Output filename.')
   args = parser.parse_args()

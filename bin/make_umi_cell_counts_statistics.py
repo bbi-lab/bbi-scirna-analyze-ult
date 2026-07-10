@@ -31,7 +31,7 @@ if __name__ == '__main__':
   parser.add_argument('-c', '--umi_cutoff', required=True, default=None, help='Minimum UMI count (required integer).')
   parser.add_argument('-f', '--fdr_cutoff', required=True, default=None, help='Maximum empty drops FDR value (required float).')
   parser.add_argument('-u', '--input_umi_counts', required=True, default=None, help='Input umi counts tsv filename (required string(s)).')
-  parser.add_argument('-e', '--input_empty_drops_fdr', required=True, default=None, help='Input empty drops TSV filename (required string(s)).')
+  parser.add_argument('-e', '--input_empty_drops_fdr', required=True, default=None, help='Input empty drops RDS filename (required string(s)).')
   parser.add_argument('-o', '--output', required=True, default=None, help='Output JSON filename (required string(s)).')
   parser.add_argument('-v', '--version', action='version', version=program_version)
   args = parser.parse_args()
@@ -95,8 +95,9 @@ if __name__ == '__main__':
   empty_drops_fdr = pd.read_csv(filepath_or_buffer=empty_drops_fdr_filename, sep='\t', header=0, index_col='cell')
 
   if(len(empty_drops_fdr) > 0):
-    cell_umi_counts_joined = cell_umi_counts.join(other=empty_drops_fdr, on='cell', how='left')
-    cell_umi_counts_fdr = cell_umi_counts_joined.loc[cell_umi_counts_joined['FDR'] <= fdr_cutoff]
+    barcode_umi_counts = barcode_umi_counts_sums.join(other=barcode_umi_counts_in, on='cell', how='inner')
+    barcode_umi_counts_joined = barcode_umi_counts.join(other=empty_drops_fdr, on='cell', how='left')
+    cell_umi_counts_fdr = barcode_umi_counts_joined.loc[barcode_umi_counts_joined['FDR'] <= fdr_cutoff]
     cell_counts_fdr = len(cell_umi_counts_fdr)
   else:
     cell_counts_fdr = -1
